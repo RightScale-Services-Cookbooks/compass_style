@@ -19,5 +19,7 @@ end
 
 action :compile do
   directory=@new_resource.directory
-  execute "compass compile #{directory}"
+  execute "compass compile #{directory}" do
+    only_if { ::File.exists?(::File.join(directory, "config.rb")) }
+  end
 end
