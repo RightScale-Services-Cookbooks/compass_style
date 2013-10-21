@@ -1,10 +1,12 @@
 action :install_dependencies do
   directory=@new_resource.directory
+  dependencies=@new_resource.dependencies
+
   gem_file=::File.join(directory, "Gemfile")
   if ::File.exists?(gem_file)
     execute "bundle install --gemfile #{gem_file} --system"
   else
-    node[:compass_style][:gem_dependencies].each do |gem_pkg|
+    %W{#{dependencies}}.each do |gem_pkg|
       %w{/usr/bin/gem /usr/local/bin/gem}.each do |gem_bin|
         Chef::Log.info "installing #{gem_pkg} to #{gem_bin}"
         gem_package "#{gem_pkg}" do
